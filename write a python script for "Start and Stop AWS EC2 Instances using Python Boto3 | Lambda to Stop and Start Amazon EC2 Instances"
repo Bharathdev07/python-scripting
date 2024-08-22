@@ -1,0 +1,24 @@
+import boto3
+import os
+
+# Use the region from the Lambda environment variable (note the correct environment variable name)
+region = os.environ['REGION']
+
+# Initialize EC2 client with the automatically provided region
+ec2 = boto3.client('ec2', region_name=REGION)
+
+def lambda_handler(event, context):
+    # Accessing environment variables (case-sensitive)
+    instance_ids = os.environ['INSTANCE_IDS'].split(',')
+    action = os.environ['ACTION'].lower()
+
+    if action == 'start':
+        response = ec2.start_instances(InstanceIds=INSTANCE_IDS)
+        print(f'Starting instances: {INSTANCE_IDS}')
+        return response
+    elif action == 'stop':
+        response = ec2.stop_instances(InstanceIds=INSTANCE_IDS)
+        print(f'Stopping instances: {INSTANCE_IDS}')
+        return response
+    else:
+        raise ValueError(f"Invalid action: {ACTION}. Use 'start' or 'stop'.")
